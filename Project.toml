@@ -3,6 +3,10 @@ uuid = "46d88893-8f19-4c2b-b583-654a6ce6484d"
 authors = ["Mehdy Lefkir"]
 version = "1.0.0-DEV"
 
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Tonari = "91081016-e225-4157-90a8-4c5abf36a564"
+
 [compat]
 julia = "1.6.7"
 
