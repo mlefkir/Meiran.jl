@@ -17,37 +17,20 @@ using Tonari
 	- `a_𝓒₁₂::Vector{Float64}`: the cross-spectral density amplitude.
 	- `a_τ::Vector{Float64}`: the time delay amplitude.
 """
-function approximate_cross_spectral_density(cs::CrossSpectralDensity, f0::Float64, fM::Float64, J::Int64)
-
-	fⱼ = 10 .^ range(log10(f0), log10(fM), length = J)
+function approximate_cross_spectral_density(cs::CrossSpectralDensity,
+	f0::Float64,
+	fM::Float64,
+	J::Int64)
 	ωⱼ = Vector{Float64}(undef, J)
 	zⱼ = Vector{Float64}(undef, J)
-
-	# first basis function centred at 0.
-	ωⱼ[1] = 2fⱼ[1]
-	zⱼ[1] = 0.0
-
-	# remaining basis functions
-	for j in 2:J
-		ωⱼ[j] = (fⱼ[j] - fⱼ[j-1])
-		zⱼ[j] = fⱼ[j-1] + ωⱼ[j] / 2
-	end
 
 	a_𝓟₁ = Vector{Float64}(undef, J)
 	a_𝓟₂ = Vector{Float64}(undef, J)
 	a_𝓒₁₂ = Vector{Float64}(undef, J)
 	a_τ = Vector{Float64}(undef, J)
 
-	a_𝓟₁[1] = cs.𝓟₁(fⱼ[1])
-	a_𝓟₂[1] = cs.𝓟₂(fⱼ[1])
-	a_𝓒₁₂[1] = √a_𝓟₁[1] * √a_𝓟₂[1]
-	a_τ[1] = cs.Δφ(fⱼ[1])
-
-	a_𝓟₁[2:end] = cs.𝓟₁.(zⱼ[2:end])
-	a_𝓟₂[2:end] = cs.𝓟₂.(zⱼ[2:end])
-	a_𝓒₁₂[2:end] = .√a_𝓟₁[2:end] .* .√a_𝓟₂[2:end]
-	a_τ[2:end] = cs.Δφ(zⱼ[2:end])
-
+	approximate_cross_spectral_density!(ωⱼ, zⱼ, a_𝓟₁, a_𝓟₂, a_𝓒₁₂, a_τ, cs, f0, fM, J)
+	fⱼ = 10 .^ range(log10(f0), log10(fM), length = J)
 	return fⱼ, ωⱼ, zⱼ, a_𝓟₁, a_𝓟₂, a_𝓒₁₂, a_τ
 end
 
@@ -79,7 +62,6 @@ function approximate_cross_spectral_density!(
 	a_𝓟₂[1] = cs.𝓟₂(f0)
 	a_𝓒₁₂[1] = √a_𝓟₁[1] * √a_𝓟₂[1]
 	a_τ[1] = cs.Δφ(f0)
- 
 
 	zv = zⱼ[2:J]
 	a_𝓟₁[2:end] = cs.𝓟₁.(zv)
