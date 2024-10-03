@@ -12,5 +12,5 @@ export approximate_cross_spectral_density,
 	approximated_covariance,
 	BlockCovarianceMatrix,
 	CholeskyBlockCovarianceMatrix,BlockMatrix_from_cs,
-	sanity_checks, cholesky
+	sanity_checks, cholesky,log_likelihood, get_chi2term
 end
