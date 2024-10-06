@@ -77,6 +77,7 @@ function approximated_covariance(τ::Float64, aⱼ::AbstractVector{Float64}, ω�
 	end
 	return R
 end
+
 function approximated_cross_covariance(τ::Float64, aⱼ::AbstractVector{Float64}, τⱼ::AbstractVector{Float64}, ωⱼ::AbstractVector{Float64}, zⱼ::AbstractVector{Float64}, J::Int64)
 	R = aⱼ[1] * ωⱼ[1] * cos(2π * zⱼ[1] * (τ + τⱼ[1])) * sinc(ωⱼ[1] * (τ + τⱼ[1]))
 	for j in 2:J

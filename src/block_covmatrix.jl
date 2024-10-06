@@ -90,8 +90,8 @@ function LinearAlgebra.cholesky(Σ::BlockCovarianceMatrix)
 	L₁₁ = cholesky(Σ₁₁).L
 	u = L₁₁ \ Σ₂₁'
 	schur = Symmetric(Σ₂₂ - u' * u)
-	L₂₁ = L₂₁'
 	L₂₂ = cholesky(schur).L
+	L₂₁ = u'
 	return L₁₁, L₂₁, L₂₂
 end
 
@@ -107,7 +107,7 @@ end
 	get_chi2term(L₁₁::LowerTriangular{Float64,Array{Float64,2}}, L₂₂::LowerTriangular{Float64,Array{Float64,2}}, Σ₂₁::Array{Float64,2}, x₁::Vector{Float64}, x₂::Vector{Float64})
 	
 """
-function get_chi2term(L₁₁::LowerTriangular{Float64,Array{Float64,2}}, L₂₂::LowerTriangular{Float64,Array{Float64,2}}, Σ₂₁::Array{Float64,2}, x₁::Vector{Float64}, x₂::Vector{Float64})
+function get_chi2term(L₁₁::LowerTriangular{Float64, Array{Float64, 2}}, L₂₂::LowerTriangular{Float64, Array{Float64, 2}}, Σ₂₁::Array{Float64, 2}, x₁::Vector{Float64}, x₂::Vector{Float64})
 	z₁ = L₁₁ \ x₁
 	w = L₂₂ \ x₂
 	v = L₁₁' \ z₁
@@ -125,6 +125,6 @@ function log_likelihood(cs::CrossSpectralDensity, t₁::Vector{Float64}, t₂::V
 	u = L₁₁ \ Σ₂₁'
 	schur = Symmetric(Σ₂₂ - u' * u)
 	L₂₂ = cholesky(schur).L
-	
+
 	return -0.5 * get_chi2term(L₁₁, L₂₂, Σ.Σ₂₁, x₁, x₂) - 0.5 * (get_logdet_triangular(L₁₁) + get_logdet_triangular(L₂₂))
 end
